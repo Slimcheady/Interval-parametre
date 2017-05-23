@@ -51,6 +51,9 @@ let maj_intervalle_attribut_lab (x:interval_attribut) a lab =
 let maj_intervalle_attribut (x:interval_attribut) a  =
   x.label<-a.label; x.min<- a.min; x.max<- a.max ;;
 
+let maj_intervalle_lab a b =
+  a.label<-b.label; a.min <- b.min; a.max<- b.max;;
+
 let maj_intervalle a b =
   a.min <- b.min; a.max<- b.max;;
 
@@ -78,24 +81,26 @@ let operateur_ctr ctr a b =  (* Met a jours les intervalles sur l'opérateur de 
 (*|Greater ->
   |Lower -> TODO *)
 
-let rec up_tree (exp: exp)  =       (*  Remonte l'arbre (pour mettre a jour les op par operateur_up) *)
-  match exp with
-  |Var n -> n
-  |Cst n -> n
-  |Exp (exp1,op,interval_attribut,exp2) -> operateur_up (up_tree exp1) op interval_attribut  (up_tree exp2);;  (*Bug avec operateur_up , comment vas et cst peuvent retourner unit?? TODO *)
- 
-let top tree =         (* Fonction qui lance la remonté de l'arbre a partir du haut *)
-  match tree with
-  |Top(exp1,ctr,exp2) -> top_aux exp1 ctr exp2  ;;
- 
 let exp_intervall_return exp =
   match exp with
   |Var n -> n
   |Cst n -> n
   |Exp(exp1,op,interval,exp2) -> interval;;
 
+let rec up_tree (exp: exp)  =       (*  Remonte l'arbre (pour mettre a jour les op par operateur_up) *)
+  match exp with
+  |Var n -> n
+  |Cst n -> n
+  |Exp (exp1,op,interval_attribut,exp2) -> operateur_up (up_tree exp1) op interval_attribut  (up_tree exp2);;  (*Bug avec operateur_up , comment vas et cst peuvent retourner unit?? TODO *)
+
 let top_aux exp1 ctr exp2 =
   up_tree exp1;operateur_ctr ctr (exp_intervall_return exp1) (up_tree exp2);;
+
+let top tree =         (* Fonction qui lance la remonté de l'arbre a partir du haut *)
+  match tree with
+  |Top(exp1,ctr,exp2) -> top_aux exp1 ctr exp2  ;;
+ 
+
 
 let down_calcul_op_fd op interval_attr fd fg =
   match op with
@@ -151,6 +156,7 @@ bottom_Up arbre1;;
 y1;;
 x1;;
 z1;;
-Plus(plus);;
-ctr1;;
 plus;;
+minus;;
+ctr1;;
+
