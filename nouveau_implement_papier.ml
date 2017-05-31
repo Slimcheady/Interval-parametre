@@ -32,6 +32,15 @@ let ctr_to_string = function
   | Greater -> ">"
   | Greater_equals   -> ">="
   | Equals ->   "="
+
+let constr_singleton lab x =
+  {label=lab; min=x; max=x};;
+
+let constr_plus lab =
+  {label = "plus_"^lab; min= min_int; max=max_int};;
+
+let constr_minus lab =
+  {label = "minus_"^lab; min= min_int; max=max_int};;
        
 let print_op chan v = output_string chan (op_to_string v)
 
@@ -166,8 +175,8 @@ let bottom_Up tree =
   tree;;
 
 (*Intervalle sur noeuds opérateur*)
-let plus = {label= "+" ; min = 0; max = 0};;
-let minus = {label= "-" ;min= 0;max= 0};;
+let plus = constr_plus "1";;
+let minus = constr_minus "1";;
 let plus2 = {label= "+" ; min = 0; max = 0};;
 let minus2 = {label= "-" ;min= 0;max= 0};;
 let plus3 = {label= "+" ; min = 0; max = 0};;
@@ -177,8 +186,8 @@ let minus4 = {label= "-" ;min= 0;max= 0};;
 
 (*Intervalle variable*)
 
-let y_1 = {label="y1"; min=1 ; max=5} ;;
-let x_1 = {label="x1"; min=2; max=4};;
+let y_1 = {label="y1"; min=0 ; max=5} ;;
+let x_1 = {label="x1"; min=4; max=7};;
 let y_2 = {label="y2"; min=10 ; max=50} ;;
 let x_2 = {label="x2"; min=30; max=40};;
 let z_2 = {label="z2"; min=20; max=70};;
@@ -191,7 +200,7 @@ let z2= Var(z_2);;
 let ctr1 = Equals;;
 let ctr2 = Lower_equals;;
 
-let zc = {label="CST_z"; min=400; max=400};;
+let zc = {label="CST_z"; min=7; max=7};;
 let z_cst=Constante(zc);;
 
 (*test simple sur - *)
@@ -204,22 +213,40 @@ let z=Constante(zr);;
 let minus = {label= "-" ;min= 0;max= 0};;
 let arbre_moins = Top(Exp(d,Minus,minus,c),ctr1,z);;
 
-let arbre1 = Top(Exp(x1,Plus,plus,y1),ctr1,z_cst);;
+let arbre1 = Top(Exp(x1,Plus,plus,y1),ctr2,z_cst);;
 let arbre2 = Top(Exp(x2,Plus,plus,Exp(y2,Minus,minus,z2)),ctr2,z_cst);;
 let arbre3 = Top(Exp(y1,Plus,plus,Exp(x1,Plus,plus2,Exp(x2,Minus,minus,Exp(y2,Minus,minus2,z2)))),ctr2,z_cst );;
 
+print_string "Arbre 1 :\n";;
 arbre1;;
 top arbre1;;
+print_string "Arbre 1 apres remonté!\n";;
+arbre1;;
 down arbre1;;
+print_string "Arbre 1 apres descente (fini)\n";;
+arbre1;;
+(*
 bottom_Up arbre1;;
-
+*)
+print_string "Arbre 2 :\n";;
 arbre2;;
 top arbre2;;
+print_string "Arbre 2 apres remonté!\n";;
+arbre2;;
 down arbre2;;
+print_string "Arbre 2 apres descente (fini)\n";;
+arbre2;;
+(*
 bottom_Up arbre2;;
-
+*)
+print_string "Arbre 3 :\n";;
 arbre3;;
 top arbre3;;
+print_string "Arbre 3 apres remonté!\n";;
+arbre3;;
 down arbre3;;
+print_string "Arbre 3 apres descente (fini)\n";;
+arbre3;;
+(*
 bottom_Up arbre3;;
-
+*)
